@@ -4,6 +4,7 @@ import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/providers/auth_provider.dart';
 import 'package:noteapp/routes.dart';
 import 'package:provider/provider.dart';
+import 'package:noteapp/services/firestore_database.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -48,6 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildForm(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    FirestoreDatabase firestoreDatabase;
 
     return Form(
         key: _formKey,
@@ -120,6 +122,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               _scaffoldKey.currentState.showSnackBar(SnackBar(
                                 content: Text(AppLocalizations.of(context).translate("loginTxtErrorSignIn")),
                               ));
+                            }
+                            else {
+                              final FirestoreDatabase firestoreDatabase = FirestoreDatabase(uid: userModel.uid);
+                              firestoreDatabase.setUser(userModel);
                             }
                           }
                         }),

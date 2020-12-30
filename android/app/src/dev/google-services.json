@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "747799024060",
-    "firebase_url": "https://note-app-dev.firebaseio.com",
-    "project_id": "note-app-dev",
-    "storage_bucket": "note-app-dev.appspot.com"
+    "project_number": "509512751082",
+    "project_id": "timemapmakerv1",
+    "storage_bucket": "timemapmakerv1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:747799024060:android:12a44c09b32bf75c3d5bb9",
+        "mobilesdk_app_id": "1:509512751082:android:81720f126c17786ba60493",
         "android_client_info": {
-          "package_name": "com.example.create_flutter_provider_app.dev"
+          "package_name": "com.timemapmaker.baseapppv1.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "747799024060-0i7261mp5tipeb817cpcr7s0cn29ck0a.apps.googleusercontent.com",
+          "client_id": "509512751082-3gmmfg6fan570os3g3n5hcu147nrvret.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.timemapmaker.baseapppv1.dev",
+            "certificate_hash": "918533918a523848bdc2d84110b166584750983b"
+          }
+        },
+        {
+          "client_id": "509512751082-ipij2ma01vrjp8tnosvl3g549otnhmje.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA_mDikkCUSSDXiwFKly7GlC25LJEJHsFA"
+          "current_key": "AIzaSyC6mqoC-QXL5PiSSlgUOdtYQWV3YT1dCz4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "747799024060-0i7261mp5tipeb817cpcr7s0cn29ck0a.apps.googleusercontent.com",
+              "client_id": "509512751082-ipij2ma01vrjp8tnosvl3g549otnhmje.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

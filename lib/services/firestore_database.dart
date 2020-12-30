@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:noteapp/models/todo_model.dart';
+import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/services/firestore_path.dart';
 import 'package:noteapp/services/firestore_service.dart';
 
@@ -25,6 +26,12 @@ class FirestoreDatabase {
   final String uid;
 
   final _firestoreService = FirestoreService.instance;
+
+  //Method to create/update userModel
+  Future<void> setUser(UserModel user) async => await _firestoreService.setData(
+    path: FirestorePath.user(uid),
+    data: user.toMap(),
+  );
 
   //Method to create/update todoModel
   Future<void> setTodo(TodoModel todo) async => await _firestoreService.setData(

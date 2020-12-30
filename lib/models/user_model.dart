@@ -12,4 +12,8 @@ class UserModel {
       this.phoneNumber,
       this.photoUrl});
 
+  Map<String, dynamic> toMap() {
+    return {'uid': uid, 'email': email};
+  }
+
 }
