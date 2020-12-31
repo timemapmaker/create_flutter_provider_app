@@ -9,9 +9,9 @@ class AppThemes {
   static const Color _lightPrimaryVariantColor = Colors.white;
   static const Color _lightSecondaryColor = Colors.green;
   static const Color _lightOnPrimaryColor = Colors.black;
-  static const Color _lightButtonPrimaryColor = Colors.orangeAccent;
-  static const Color _lightAppBarColor = Colors.orangeAccent;
-  static Color _lightIconColor = Colors.orangeAccent;
+  static const Color _lightButtonPrimaryColor = Colors.orange;
+  static const Color _lightAppBarColor = Colors.white;
+  static Color _lightIconColor = Colors.grey;
   static Color _lightSnackBarBackgroundErrorColor = Colors.redAccent;
 
   //text theme for light theme
@@ -38,12 +38,12 @@ class AppThemes {
 
   //constants color range for dark theme
   static const Color _darkPrimaryColor = Colors.white;
-  static const Color _darkPrimaryVariantColor = Colors.black;
+  static const Color _darkPrimaryVariantColor = Color.fromRGBO(58, 66, 86, 1.0);
   static const Color _darkSecondaryColor = Colors.white;
   static const Color _darkOnPrimaryColor = Colors.white;
-  static const Color _darkButtonPrimaryColor = Colors.deepPurpleAccent;
-  static const Color _darkAppBarColor = Colors.deepPurpleAccent;
-  static Color _darkIconColor = Colors.deepPurpleAccent;
+  static const Color _darkButtonPrimaryColor = Colors.orange;
+  static const Color _darkAppBarColor = Color.fromRGBO(64, 75, 96, .9);
+  static Color _darkIconColor = Colors.white;
   static Color _darkSnackBarBackgroundErrorColor = Colors.redAccent;
 
   //text theme for dark theme
