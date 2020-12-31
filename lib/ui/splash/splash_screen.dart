@@ -25,14 +25,11 @@ class _SplashScreenState extends State<SplashScreen> {
       children: <Widget>[
         Center(
             child: Text(
-              AppLocalizations.of(context).translate("splashTitle"),
+              AppLocalizations.of(context).translate("timemap"),
           style: TextStyle(
-            fontSize: Theme.of(context).textTheme.headline.fontSize,
+            fontSize: Theme.of(context).textTheme.headline3.fontSize,
           ),
         )),
-        FlutterLogo(
-          size: 128,
-        ),
       ],
     )));
   }
