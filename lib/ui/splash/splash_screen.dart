@@ -20,18 +20,18 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
         body: Center(
             child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Center(
-            child: Text(
-              AppLocalizations.of(context).translate("timemap"),
-          style: TextStyle(
-            fontSize: Theme.of(context).textTheme.headline3.fontSize,
-          ),
-        )),
-      ],
-    )));
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Center(
+                    child: Text(
+                      AppLocalizations.of(context).translate("timemap"),
+                      style: TextStyle(
+                        fontSize: Theme.of(context).textTheme.headline3.fontSize,
+                      ),
+                    )),
+              ],
+            )));
   }
 
   startTimer() {
