@@ -24,7 +24,7 @@ class AppThemes {
   static final TextStyle _lightScreenButtonTextStyle = TextStyle(
       fontSize: 14.0, color: _lightOnPrimaryColor, fontWeight: FontWeight.w500);
   static final TextStyle _lightScreenCaptionTextStyle = TextStyle(
-      fontSize: 12.0, color: _lightAppBarColor, fontWeight: FontWeight.w100);
+      fontSize: 12.0, color: /*_lightAppBarColor*/_lightOnPrimaryColor, fontWeight: FontWeight.w100);
 
   static final TextTheme _lightTextTheme = TextTheme(
     headline: _lightScreenHeadingTextStyle,
@@ -56,7 +56,7 @@ class AppThemes {
   static final TextStyle _darkScreenButtonTextStyle = TextStyle(
       fontSize: 14.0, color: _darkOnPrimaryColor, fontWeight: FontWeight.w500);
   static final TextStyle _darkScreenCaptionTextStyle = TextStyle(
-      fontSize: 12.0, color: _darkAppBarColor, fontWeight: FontWeight.w100);
+      fontSize: 12.0, color: /*_darkAppBarColor*/_darkOnPrimaryColor, fontWeight: FontWeight.w100);
 
   static final TextTheme _darkTextTheme = TextTheme(
     headline: _darkScreenHeadingTextStyle,
