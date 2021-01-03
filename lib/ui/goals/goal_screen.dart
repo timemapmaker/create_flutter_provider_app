@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/models/todo_model.dart';
 import 'package:noteapp/models/user_model.dart';
+import 'package:noteapp/models/goal_model.dart';
+import 'package:noteapp/widgets/color_picker.dart';
 import 'package:noteapp/providers/auth_provider.dart';
 import 'package:noteapp/routes.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:noteapp/ui/todo/empty_content.dart';
-import 'package:noteapp/ui/todo/todos_extra_actions.dart';
 import 'package:provider/provider.dart';
 
-import '../../routes.dart';
-
-class TodosScreen extends StatelessWidget {
+class goalScreen extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final firestoreDatabase =
-        Provider.of<FirestoreDatabase>(context, listen: false);
+    final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -28,19 +25,16 @@ class TodosScreen extends StatelessWidget {
             builder: (context, snapshot) {
               final UserModel user = snapshot.data;
               return Text(user != null
-                  ? user.email + " - " + AppLocalizations.of(context).translate("homeAppBarTitle")
+                  ? user.email + " - " +
+                  AppLocalizations.of(context).translate("homeAppBarTitle")
                   : AppLocalizations.of(context).translate("homeAppBarTitle"));
             }),
         actions: <Widget>[
           StreamBuilder(
-              stream: firestoreDatabase.todosStream(),
+              stream: firestoreDatabase.goalStream(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  List<TodoModel> todos = snapshot.data;
-                  return Visibility(
-                      visible: todos.isNotEmpty ? true : false,
-                      child: TodosExtraActions());
-                } else {
+                  List<GoalModel> goals = snapshot.data;
                   return Container(
                     width: 0,
                     height: 0,
@@ -54,94 +48,104 @@ class TodosScreen extends StatelessWidget {
               }),
         ],
       ),
-      bottomNavigationBar: bottomnav(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed(
-            Routes.create_edit_todo,
+            Routes.create_edit_goal,
           );
         },
       ),
+      bottomNavigationBar: bottomnav(),
       body: WillPopScope(
           onWillPop: () async => false, child: _buildBodySection(context)),
     );
   }
 
   Widget _buildBodySection(BuildContext context) {
-    final firestoreDatabase =
-        Provider.of<FirestoreDatabase>(context, listen: false);
+    final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
 
     return StreamBuilder(
-        stream: firestoreDatabase.todosStream(),
+        stream: firestoreDatabase.goalStream(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<TodoModel> todos = snapshot.data;
-            if (todos.isNotEmpty) {
+            List<GoalModel> goals = snapshot.data;
+            if (goals.isNotEmpty) {
               return ListView.separated(
-                itemCount: todos.length,
+                itemCount: goals.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
                     background: Container(
                       color: Colors.red,
                       child: Center(
                           child: Text(
-                            AppLocalizations.of(context).translate("todosDismissibleMsgTxt"),
-                        style: TextStyle(color: Theme.of(context).canvasColor),
-                      )),
+                            AppLocalizations.of(context).translate(
+                                "todosDismissibleMsgTxt"),
+                            style: TextStyle(color: Theme
+                                .of(context)
+                                .canvasColor),
+                          )),
                     ),
-                    key: Key(todos[index].id),
+                    key: Key(goals[index].id),
                     onDismissed: (direction) {
-                      firestoreDatabase.deleteTodo(todos[index]);
-
+                      firestoreDatabase.deleteGoal(goals[index]);
                       _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        backgroundColor: Theme.of(context).appBarTheme.color,
+                        backgroundColor: Theme
+                            .of(context)
+                            .appBarTheme
+                            .color,
                         content: Text(
-                          AppLocalizations.of(context).translate("todosSnackBarContent") + todos[index].task,
+                          AppLocalizations.of(context).translate(
+                              "todosSnackBarContent") + goals[index].goalName,
                           style:
-                              TextStyle(color: Theme.of(context).canvasColor),
+                          TextStyle(color: Theme
+                              .of(context)
+                              .canvasColor),
                         ),
                         duration: Duration(seconds: 3),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context).translate("todosSnackBarActionLbl"),
-                          textColor: Theme.of(context).canvasColor,
+                          label: AppLocalizations.of(context).translate(
+                              "todosSnackBarActionLbl"),
+                          textColor: Theme
+                              .of(context)
+                              .canvasColor,
                           onPressed: () {
-                            firestoreDatabase.setTodo(todos[index]);
+                            firestoreDatabase.setGoal(goals[index]);
                           },
                         ),
                       ));
                     },
                     child: ListTile(
-                      leading: Checkbox(
-                          value: todos[index].complete,
-                          onChanged: (value) {
-                            TodoModel todo = TodoModel(
-                                id: todos[index].id,
-                                task: todos[index].task,
-                                extraNote: todos[index].extraNote,
-                                complete: value);
-                            firestoreDatabase.setTodo(todo);
-                          }),
-                      title: Text(todos[index].task),
-                      onTap: () {
-                        Navigator.of(context).pushNamed(Routes.create_edit_todo,
-                            arguments: todos[index]);
-                      },
+                      leading: CircleAvatar(
+                        radius: 12.0,
+                        backgroundColor: goals[index].goalColor,),
+                      title: Text(goals[index].goalName),
+                      trailing: IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.grey, size: 18.0,),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                              Routes.create_edit_goal,arguments: goals[index]
+                            );
+                          }
+                      ),
+                      onTap: () {},
                     ),
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return Divider(height: 0.5);
+                  return Divider(height: 0.5, color: Colors.grey,);
                 },
               );
             } else {
-              return EmptyContentWidget(
+              return
+              EmptyContentWidget(
                 title: AppLocalizations.of(context).translate("todosEmptyTopMsgDefaultTxt"),
                 message: AppLocalizations.of(context).translate("todosEmptyBottomDefaultMsgTxt"),
               );
             }
           } else if (snapshot.hasError) {
-            return EmptyContentWidget(
+            return
+            EmptyContentWidget(
               title: AppLocalizations.of(context).translate("todosErrorTopMsgTxt"),
               message: AppLocalizations.of(context).translate("todosErrorBottomMsgTxt"),
             );
@@ -150,3 +154,4 @@ class TodosScreen extends StatelessWidget {
         });
   }
 }
+

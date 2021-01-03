@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/constants/app_font_family.dart';
 
+import '../routes.dart';
+
 class AppThemes {
   AppThemes._();
 
@@ -9,7 +11,7 @@ class AppThemes {
   static const Color _lightPrimaryVariantColor = Colors.white;
   static const Color _lightSecondaryColor = Colors.green;
   static const Color _lightOnPrimaryColor = Colors.black;
-  static const Color _lightButtonPrimaryColor = Colors.orange;
+  static const Color _lightButtonPrimaryColor = Colors.blueGrey;
   static const Color _lightAppBarColor = Colors.white;
   static Color _lightIconColor = Colors.grey;
   static Color _lightSnackBarBackgroundErrorColor = Colors.redAccent;
@@ -41,7 +43,7 @@ class AppThemes {
   static const Color _darkPrimaryVariantColor = Color.fromRGBO(58, 66, 86, 1.0);
   static const Color _darkSecondaryColor = Colors.white;
   static const Color _darkOnPrimaryColor = Colors.white;
-  static const Color _darkButtonPrimaryColor = Colors.orange;
+  static const Color _darkButtonPrimaryColor = Colors.blueGrey;
   static const Color _darkAppBarColor = Color.fromRGBO(64, 75, 96, .9);
   static Color _darkIconColor = Colors.white;
   static Color _darkSnackBarBackgroundErrorColor = Colors.redAccent;
@@ -80,6 +82,11 @@ class AppThemes {
       iconTheme: IconThemeData(color: _lightOnPrimaryColor),
       textTheme: _lightTextTheme,
     ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: _lightAppBarColor,
+      unselectedItemColor: _lightIconColor,
+      selectedItemColor: _lightButtonPrimaryColor,
+    ),
     colorScheme: ColorScheme.light(
       primary: _lightPrimaryColor,
       primaryVariant: _lightPrimaryVariantColor,
@@ -115,6 +122,11 @@ class AppThemes {
       color: _darkAppBarColor,
       iconTheme: IconThemeData(color: _darkOnPrimaryColor),
       textTheme: _darkTextTheme,
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: _darkAppBarColor,
+      unselectedItemColor: _darkIconColor,
+      selectedItemColor: _darkButtonPrimaryColor,
     ),
     colorScheme: ColorScheme.light(
       primary: _darkPrimaryColor,

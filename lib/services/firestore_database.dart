@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:noteapp/models/todo_model.dart';
 import 'package:noteapp/models/user_model.dart';
+import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/services/firestore_path.dart';
 import 'package:noteapp/services/firestore_service.dart';
 
@@ -39,9 +40,20 @@ class FirestoreDatabase {
         data: todo.toMap(),
       );
 
+  //Method to create/update goalModel
+  Future<void> setGoal(GoalModel goal) async => await _firestoreService.setData(
+    path: FirestorePath.goal(uid, goal.id),
+    data: goal.toMap(),
+  );
+
   //Method to delete todoModel entry
   Future<void> deleteTodo(TodoModel todo) async {
     await _firestoreService.deleteData(path: FirestorePath.todo(uid, todo.id));
+  }
+
+  //Method to delete goal entry
+  Future<void> deleteGoal(GoalModel goal) async {
+    await _firestoreService.deleteData(path: FirestorePath.goal(uid, goal.id));
   }
 
   //Method to retrieve todoModel object based on the given todoId
@@ -50,6 +62,12 @@ class FirestoreDatabase {
         path: FirestorePath.todo(uid, todoId),
         builder: (data, documentId) => TodoModel.fromMap(data, documentId),
       );
+
+  //Method to retrieve all goals item from the same user based on uid
+  Stream<List<GoalModel>> goalStream() => _firestoreService.collectionStream(
+    path: FirestorePath.goals(uid),
+    builder: (data, documentId) => GoalModel.fromMap(data, documentId),
+  );
 
   //Method to retrieve all todos item from the same user based on uid
   Stream<List<TodoModel>> todosStream() => _firestoreService.collectionStream(

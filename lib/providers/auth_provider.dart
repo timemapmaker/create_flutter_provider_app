@@ -9,6 +9,7 @@ enum Status {
   Unauthenticated,
   Registering
 }
+
 /*
 The UI will depends on the Status to decide which screen/action to be done.
 
