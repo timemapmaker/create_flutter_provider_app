@@ -19,11 +19,11 @@ class stacktodoScreen extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context);
     final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
     final StackScreenArguments inargs = ModalRoute.of(context).settings.arguments;
-    final StacktodoScreenArguments outargs=StacktodoScreenArguments(inargs.goal, inargs.stack, null);
+    final StacktodoScreenArguments outargs=StacktodoScreenArguments(inargs.goal, inargs.stack, null, null);
 
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
+        /*appBar: AppBar(
           title: StreamBuilder(
               stream: authProvider.user,
               builder: (context, snapshot) {
@@ -48,18 +48,15 @@ class stacktodoScreen extends StatelessWidget {
                   Navigator.of(context).pushNamed(Routes.setting);
                 }),
           ],
-        ),
+        ),*/
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
             Navigator.of(context).pushNamed(
-                Routes.create_edit_stacktodos, arguments: StacktodoScreenArguments(outargs.goal, outargs.stack, null)
+                Routes.create_edit_stacktodos, arguments: StacktodoScreenArguments(outargs.goal, outargs.stack, null, null)
             );
           },
         ),
-        bottomNavigationBar: bottomnav(),
-        /*body: WillPopScope(
-          onWillPop: () async => false, child: _buildBodySection(context)),*/
         body: _buildBodySection(context)
     );
   }
@@ -67,7 +64,7 @@ class stacktodoScreen extends StatelessWidget {
   Widget _buildBodySection(BuildContext context) {
     final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
     final StackScreenArguments inargs = ModalRoute.of(context).settings.arguments;
-    final StacktodoScreenArguments outargs=StacktodoScreenArguments(inargs.goal, inargs.stack, null);
+    final StacktodoScreenArguments outargs=StacktodoScreenArguments(inargs.goal, inargs.stack, null, null);
 
     return StreamBuilder(
         stream: firestoreDatabase.goalstacktodosStream(goalId: inargs.goal.id, stackId: inargs.stack.id),
@@ -132,7 +129,7 @@ class stacktodoScreen extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).pushNamed(
                             Routes.create_edit_stacktodos,
-                            arguments: StacktodoScreenArguments(outargs.goal, outargs.stack, stacktodos[index])
+                            arguments: StacktodoScreenArguments(outargs.goal, outargs.stack, stacktodos[index], null)
                         );
                       },
                     ),

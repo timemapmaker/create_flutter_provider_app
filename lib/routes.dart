@@ -3,6 +3,7 @@ import 'package:noteapp/ui/auth/register_screen.dart';
 import 'package:noteapp/ui/auth/sign_in_screen.dart';
 import 'package:noteapp/ui/goals/goal_screen.dart';
 import 'package:noteapp/ui/stacks/stack_screen.dart';
+import 'package:noteapp/ui/stacks/stack_detail_screen.dart';
 import 'package:noteapp/ui/setting/setting_screen.dart';
 import 'package:noteapp/ui/splash/splash_screen.dart';
 import 'package:noteapp/ui/todo/create_edit_todo_screen.dart';
@@ -10,6 +11,8 @@ import 'package:noteapp/ui/goals/create_edit_goal_screen.dart';
 import 'package:noteapp/ui/stacks/create_edit_stack.dart';
 import 'package:noteapp/ui/stacks/stacktodo_screen.dart';
 import 'package:noteapp/ui/stacks/create_edit_stacktodo.dart';
+import 'package:noteapp/ui/stacks/stacknote_screen.dart';
+import 'package:noteapp/ui/stacks/create_edit_stacknote.dart';
 import 'package:noteapp/ui/todo/todos_screen.dart';
 
 class Routes {
@@ -24,9 +27,12 @@ class Routes {
   static const String create_edit_goal = '/create_edit_goal';
   static const String create_edit_stack = '/create_edit_stack';
   static const String create_edit_stacktodos = '/create_edit_stacktodos';
+  static const String create_edit_stacknotes = '/create_edit_stacknotes';
   static const String goals = '/goals';
   static const String stacks = '/stacks';
   static const String stacktodos = '/stacktodos';
+  static const String stacknotes = '/stacknotes';
+  static const String stackdetails = '/stackdetails';
 
 
   static final routes = <String, WidgetBuilder>{
@@ -42,6 +48,9 @@ class Routes {
     stacks: (BuildContext context) => stackScreen(),
     stacktodos: (BuildContext context) => stacktodoScreen(),
     create_edit_stacktodos: (BuildContext context) => CreateEditStackTodo(),
+    stacknotes: (BuildContext context) => stacknoteScreen(),
+    create_edit_stacknotes: (BuildContext context) => CreateEditStackNote(),
+    stackdetails: (BuildContext context) => stackdetailScreen(),
   };
 }
 

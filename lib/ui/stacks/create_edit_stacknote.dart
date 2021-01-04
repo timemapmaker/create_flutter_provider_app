@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/models/stacktodo_model.dart';
+import 'package:noteapp/models/stacknote_model.dart';
 import 'package:noteapp/models/screen_arguments_model.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:provider/provider.dart';
 
-class CreateEditStackTodo extends StatefulWidget {
+class CreateEditStackNote extends StatefulWidget {
   @override
-  _CreateEditStackTodoState createState() => _CreateEditStackTodoState();
+  _CreateEditStackNoteState createState() => _CreateEditStackNoteState();
 }
 
-class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
-  TextEditingController _taskController;
-  TextEditingController _extraNoteController;
+class _CreateEditStackNoteState extends State<CreateEditStackNote> {
+  TextEditingController _titleController;
+  TextEditingController _contentController;
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  //final StacktodoScreenArguments args = null;
-  StackTodoModel _stacktodo;
-  bool _checkboxCompleted;
+  StackNoteModel _stacknote;
+
 
   @override
   void initState() {
@@ -28,17 +27,15 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final StacktodoScreenArguments _stackScreenTodoArguments = ModalRoute.of(context).settings.arguments;
-    final StackTodoModel _stacktodoModel = _stackScreenTodoArguments.stacktodo;
-    if (_stacktodoModel != null) {
-      _stacktodo = _stacktodoModel;
+    final StackNoteModel _stacknoteModel = _stackScreenTodoArguments.stacknote;
+    if (_stacknoteModel != null) {
+      _stacknote = _stacknoteModel;
     }
 
-    _taskController =
-        TextEditingController(text: _stacktodo != null ? _stacktodo.task : "");
-    _extraNoteController =
-        TextEditingController(text: _stacktodo != null ? _stacktodo.extraNote : "");
-
-    _checkboxCompleted = _stacktodo != null ? _stacktodo.complete : false;
+    _titleController =
+        TextEditingController(text: _stacknote != null ? _stacknote.title : "");
+    _contentController =
+        TextEditingController(text: _stacknote != null ? _stacknote.content : "");
   }
 
   @override
@@ -63,16 +60,16 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
                   final firestoreDatabase =
                   Provider.of<FirestoreDatabase>(context, listen: false);
 
-                  firestoreDatabase.setStackTodo(
-                      StackTodoModel(
-                      id: _stacktodo != null
-                          ? _stacktodo.id
-                          : documentIdFromCurrentDate(),
-                      task: _taskController.text,
-                      extraNote: _extraNoteController.text.length > 0
-                          ? _extraNoteController.text
-                          : "",
-                      complete: _checkboxCompleted),
+                  firestoreDatabase.setStackNote(
+                      StackNoteModel(
+                          id: _stacknote != null
+                              ? _stacknote.id
+                              : documentIdFromCurrentDate(),
+                          title: _titleController.text,
+                          content: _contentController.text.length > 0
+                              ? _contentController.text
+                              : "",
+                          ),
                       _stackScreenTodoArguments.goal.id,
                       _stackScreenTodoArguments.stack.id);
 
@@ -90,8 +87,8 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
 
   @override
   void dispose() {
-    _taskController.dispose();
-    _extraNoteController.dispose();
+    _titleController.dispose();
+    _contentController.dispose();
     super.dispose();
   }
 
@@ -107,7 +104,7 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               TextFormField(
-                controller: _taskController,
+                controller: _titleController,
                 style: Theme.of(context).textTheme.body1,
                 validator: (value) => value.isEmpty
                     ? AppLocalizations.of(context).translate("todosCreateEditTaskNameValidatorMsg")
@@ -116,13 +113,13 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Theme.of(context).iconTheme.color, width: 2)),
-                  labelText: _stackScreenTodoArguments.stack.stackName.toString()+" Todo",
+                  labelText: _stackScreenTodoArguments.stack.stackName + " Note Title",
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: TextFormField(
-                  controller: _extraNoteController,
+                  controller: _contentController,
                   style: Theme.of(context).textTheme.body1,
                   maxLines: 15,
                   decoration: InputDecoration(
@@ -137,22 +134,6 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(AppLocalizations.of(context).translate("todosCreateEditCompletedTxt")),
-                    Checkbox(
-                        value: _checkboxCompleted,
-                        onChanged: (value) {
-                          setState(() {
-                            _checkboxCompleted = value;
-                          });
-                        })
-                  ],
-                ),
-              )
             ],
           ),
         ),

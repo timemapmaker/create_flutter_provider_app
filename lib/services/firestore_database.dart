@@ -6,6 +6,7 @@ import 'package:noteapp/models/todo_model.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/models/stacktodo_model.dart';
+import 'package:noteapp/models/stacknote_model.dart';
 import 'package:noteapp/models/stack_model.dart';
 import 'package:noteapp/services/firestore_path.dart';
 import 'package:noteapp/services/firestore_service.dart';
@@ -61,6 +62,12 @@ class FirestoreDatabase {
     data: stacktodo.toMap(),
   );
 
+  //Method to create/update StackNoteModel
+  Future<void> setStackNote(StackNoteModel stacknote, String goalId, String stackId) async => await _firestoreService.setData(
+    path: FirestorePath.goalstacknote(uid, goalId, stackId, stacknote.id),
+    data: stacknote.toMap(),
+  );
+
   //Method to delete todoModel entry
   Future<void> deleteTodo(TodoModel todo) async {
     await _firestoreService.deleteData(path: FirestorePath.todo(uid, todo.id));
@@ -79,6 +86,11 @@ class FirestoreDatabase {
   //Method to delete stacktodo entry
   Future<void> deleteStackTodo(StackTodoModel stacktodo, String goalId, String stackId) async {
     await _firestoreService.deleteData(path: FirestorePath.goalstacktodo(uid, goalId, stackId, stacktodo.id));
+  }
+
+  //Method to delete stacktodo entry
+  Future<void> deleteStackNote(StackNoteModel stacknote, String goalId, String stackId) async {
+    await _firestoreService.deleteData(path: FirestorePath.goalstacktodo(uid, goalId, stackId, stacknote.id));
   }
 
   //Method to retrieve todoModel object based on the given todoId
@@ -100,6 +112,13 @@ class FirestoreDatabase {
       _firestoreService.documentStream(
         path: FirestorePath.goalstacktodo(uid, goalId, stackId, stacktodoId),
         builder: (data, documentId) => StackTodoModel.fromMap(data, documentId),
+      );
+
+  //Method to retrieve stacknoteModel object based on the given stackId and goalid
+  Stream<StackNoteModel> stacknoteStream({@required String goalId, String stackId, String stacknoteId}) =>
+      _firestoreService.documentStream(
+        path: FirestorePath.goalstacknote(uid, goalId, stackId, stacknoteId),
+        builder: (data, documentId) => StackNoteModel.fromMap(data, documentId),
       );
 
   //Method to retrieve all goals item from the same user based on uid
@@ -124,6 +143,12 @@ class FirestoreDatabase {
   Stream<List<StackTodoModel>> goalstacktodosStream({@required String goalId, String stackId}) => _firestoreService.collectionStream(
     path: FirestorePath.goalstacktodos(uid, goalId, stackId),
     builder: (data, documentId) => StackTodoModel.fromMap(data, documentId),
+  );
+
+  //Method to retrieve all stacknotes items from the same user based on uid, goalid and stackid
+  Stream<List<StackNoteModel>> goalstacknotesStream({@required String goalId, String stackId}) => _firestoreService.collectionStream(
+    path: FirestorePath.goalstacknotes(uid, goalId, stackId),
+    builder: (data, documentId) => StackNoteModel.fromMap(data, documentId),
   );
 
   //Method to mark all todoModel to be complete

@@ -2,6 +2,7 @@ import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/stack_model.dart';
 import 'package:noteapp/models/stacktodo_model.dart';
+import 'package:noteapp/models/stacknote_model.dart';
 
 
 class StackScreenArguments {
@@ -14,5 +15,6 @@ class StacktodoScreenArguments {
   GoalModel goal;
   StackModel stack;
   StackTodoModel stacktodo;
-  StacktodoScreenArguments(this.goal, this.stack, this.stacktodo);
+  StackNoteModel stacknote;
+  StacktodoScreenArguments(this.goal, this.stack, this.stacktodo, this.stacknote);
 }
