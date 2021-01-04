@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/app_localizations.dart';
+import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/models/stack_model.dart';
+import 'package:noteapp/models/screen_arguments_model.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +17,7 @@ class _CreateEditGoalStackState extends State<CreateEditGoalStack> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   StackModel _stack;
 
+
   @override
   void initState() {
     super.initState();
@@ -23,17 +26,18 @@ class _CreateEditGoalStackState extends State<CreateEditGoalStack> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final StackModel _stackModel = null;
+    final StackScreenArguments _stackScreenArguments = ModalRoute.of(context).settings.arguments;
+    final StackModel _stackModel = _stackScreenArguments.stack;
     if (_stackModel != null) {
       _stack = _stackModel;
     }
-
     _stackNameController = TextEditingController(text: _stack != null ? _stack.stackName : "");
-
   }
 
   @override
   Widget build(BuildContext context) {
+    final StackScreenArguments _stackScreenArguments = ModalRoute.of(context).settings.arguments;
+    _stack = _stackScreenArguments.stack;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -55,7 +59,7 @@ class _CreateEditGoalStackState extends State<CreateEditGoalStack> {
                   firestoreDatabase.setStack(StackModel(
                       id: _stack != null ? _stack.id : documentIdFromCurrentDate(),
                       stackName: _stackNameController.text
-                  ), ModalRoute.of(context).settings.arguments);
+                  ),  _stackScreenArguments.goal.id);
                   Navigator.of(context).pop();
                 }
               },

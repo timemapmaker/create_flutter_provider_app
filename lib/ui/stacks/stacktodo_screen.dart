@@ -4,75 +4,79 @@ import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/stack_model.dart';
 import 'package:noteapp/models/screen_arguments_model.dart';
+import 'package:noteapp/models/stacktodo_model.dart';
 import 'package:noteapp/providers/auth_provider.dart';
 import 'package:noteapp/routes.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:noteapp/ui/todo/empty_content.dart';
 import 'package:provider/provider.dart';
 
-class stackScreen extends StatelessWidget {
+class stacktodoScreen extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
-    final GoalModel goal = ModalRoute.of(context).settings.arguments;
+    final StackScreenArguments inargs = ModalRoute.of(context).settings.arguments;
+    final StacktodoScreenArguments outargs=StacktodoScreenArguments(inargs.goal, inargs.stack, null);
 
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: StreamBuilder(
-            stream: authProvider.user,
-            builder: (context, snapshot) {
-              final UserModel user = snapshot.data;
-              return Text(goal.goalName);
-            }),
-        actions: <Widget>[
-          StreamBuilder(
-              stream: firestoreDatabase.goalstacksStream(goalId: goal.id),
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: StreamBuilder(
+              stream: authProvider.user,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  List<StackModel> stacks = snapshot.data;
-                  return Container(
-                    width: 0,
-                    height: 0,
-                  );
-                }
+                final UserModel user = snapshot.data;
+                return Text((inargs.goal.goalName) + " > " + (inargs.stack.stackName));
               }),
-          IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: () {
-                Navigator.of(context).pushNamed(Routes.setting);
-              }),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).pushNamed(
-            Routes.create_edit_stack, arguments: StackScreenArguments(goal, null)
-          );
-        },
-      ),
-      bottomNavigationBar: bottomnav(),
-      body: _buildBodySection(context)
+          actions: <Widget>[
+            StreamBuilder(
+                stream: firestoreDatabase.goalstacktodosStream(goalId: inargs.goal.id, stackId: inargs.stack.id),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<StackTodoModel> stacktodos = snapshot.data;
+                    return Container(
+                      width: 0,
+                      height: 0,
+                    );
+                  }
+                }),
+            IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(Routes.setting);
+                }),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.of(context).pushNamed(
+                Routes.create_edit_stacktodos, arguments: StacktodoScreenArguments(outargs.goal, outargs.stack, null)
+            );
+          },
+        ),
+        bottomNavigationBar: bottomnav(),
+        /*body: WillPopScope(
+          onWillPop: () async => false, child: _buildBodySection(context)),*/
+        body: _buildBodySection(context)
     );
   }
 
   Widget _buildBodySection(BuildContext context) {
     final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
-    GoalModel goal = ModalRoute.of(context).settings.arguments;
-    final StackScreenArguments args = StackScreenArguments(goal, null);
+    final StackScreenArguments inargs = ModalRoute.of(context).settings.arguments;
+    final StacktodoScreenArguments outargs=StacktodoScreenArguments(inargs.goal, inargs.stack, null);
 
     return StreamBuilder(
-        stream: firestoreDatabase.goalstacksStream(goalId: goal.id),
+        stream: firestoreDatabase.goalstacktodosStream(goalId: inargs.goal.id, stackId: inargs.stack.id),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<StackModel> stacks = snapshot.data;
-            if (stacks.isNotEmpty) {
+            List<StackTodoModel> stacktodos = snapshot.data;
+            if (stacktodos.isNotEmpty) {
               return ListView.separated(
-                itemCount: stacks.length,
+                itemCount: stacktodos.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
                     background: Container(
@@ -86,15 +90,15 @@ class stackScreen extends StatelessWidget {
                                 .canvasColor),
                           )),
                     ),
-                    key: Key(stacks[index].id),
+                    key: Key(stacktodos[index].id),
                     onDismissed: (direction) {
-                      firestoreDatabase.deleteStack(stacks[index], goal.id);
+                      firestoreDatabase.deleteStackTodo(stacktodos[index], inargs.goal.id, inargs.stack.id);
                       _scaffoldKey.currentState.showSnackBar(SnackBar(
                         backgroundColor: Theme
                             .of(context)
                             .appBarTheme
                             .color,
-                        content: Text(goal.goalName,
+                        content: Text(stacktodos[index].task,
                           style:
                           TextStyle(color: Theme
                               .of(context)
@@ -113,19 +117,22 @@ class stackScreen extends StatelessWidget {
                       ));
                     },
                     child: ListTile(
-                      leading: Icon(Icons.folder, color: Colors.grey,),
-                      title: Text(stacks[index].stackName),
-                      trailing: IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.grey, size: 18.0,),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                                Routes.create_edit_stack, arguments:StackScreenArguments(args.goal, stacks[index])
-                            );
-                          }
-                      ),
+                      leading:
+                      Checkbox(
+                          value: stacktodos[index].complete,
+                          onChanged: (value) {
+                          StackTodoModel stacktodo = StackTodoModel(
+                              id: stacktodos[index].id,
+                              task: stacktodos[index].task,
+                              extraNote: stacktodos[index].extraNote,
+                              complete: value);
+                          firestoreDatabase.setStackTodo(stacktodo, inargs.goal.id, inargs.stack.id);
+                        }),
+                      title: Text(stacktodos[index].task),
                       onTap: () {
                         Navigator.of(context).pushNamed(
-                            Routes.stacktodos,arguments: StackScreenArguments(args.goal, stacks[index])
+                            Routes.create_edit_stacktodos,
+                            arguments: StacktodoScreenArguments(outargs.goal, outargs.stack, stacktodos[index])
                         );
                       },
                     ),

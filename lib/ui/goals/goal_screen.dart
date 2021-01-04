@@ -125,13 +125,13 @@ class goalScreen extends StatelessWidget {
                           icon: const Icon(Icons.edit, color: Colors.grey, size: 18.0,),
                           onPressed: () {
                             Navigator.of(context).pushNamed(
-                              Routes.create_edit_goal,arguments:goals[index]
+                              Routes.create_edit_goal, arguments:goals[index]
                             );
                           }
                       ),
                       onTap: () {
                         Navigator.of(context).pushNamed(
-                            Routes.stacks,arguments: goals[index]
+                            Routes.stacks, arguments: goals[index]
                         );
                       },
                     ),

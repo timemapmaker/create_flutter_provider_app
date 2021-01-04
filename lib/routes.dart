@@ -8,6 +8,8 @@ import 'package:noteapp/ui/splash/splash_screen.dart';
 import 'package:noteapp/ui/todo/create_edit_todo_screen.dart';
 import 'package:noteapp/ui/goals/create_edit_goal_screen.dart';
 import 'package:noteapp/ui/stacks/create_edit_stack.dart';
+import 'package:noteapp/ui/stacks/stacktodo_screen.dart';
+import 'package:noteapp/ui/stacks/create_edit_stacktodo.dart';
 import 'package:noteapp/ui/todo/todos_screen.dart';
 
 class Routes {
@@ -21,8 +23,10 @@ class Routes {
   static const String create_edit_todo = '/create_edit_todo';
   static const String create_edit_goal = '/create_edit_goal';
   static const String create_edit_stack = '/create_edit_stack';
+  static const String create_edit_stacktodos = '/create_edit_stacktodos';
   static const String goals = '/goals';
   static const String stacks = '/stacks';
+  static const String stacktodos = '/stacktodos';
 
 
   static final routes = <String, WidgetBuilder>{
@@ -36,6 +40,8 @@ class Routes {
     create_edit_stack: (BuildContext context) => CreateEditGoalStack(),
     goals: (BuildContext context) => goalScreen(),
     stacks: (BuildContext context) => stackScreen(),
+    stacktodos: (BuildContext context) => stacktodoScreen(),
+    create_edit_stacktodos: (BuildContext context) => CreateEditStackTodo(),
   };
 }
 

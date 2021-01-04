@@ -14,7 +14,7 @@ class FirestorePath {
   static String goalstack(String uid, String goalId, String stackId) => 'users/$uid/goals/$goalId/stacks/$stackId';
   static String goalstacktodos(String uid, String goalId, String stackId) => 'users/$uid/goals/$goalId/stacks/$stackId/todos';
   static String goalstacknotes(String uid, String goalId, String stackId) => 'users/$uid/goals/$goalId/stacks/$stackId/notes';
-  static String goalstacktodo(String uid, String goalId, String stackId, String todoId) => 'users/$uid/goals/$goalId/stacks/$stackId/todos/$todoId';
+  static String goalstacktodo(String uid, String goalId, String stackId, String stacktodoId) => 'users/$uid/goals/$goalId/stacks/$stackId/todos/$stacktodoId';
   static String goalstacknote(String uid, String goalId, String stackId, String noteId) => 'users/$uid/goals/$goalId/stacks/$stackId/notes/$noteId';
   static String inboxstacks(String uid) => 'users/$uid/inbox';
   static String inboxstack(String uid, String istackId) => 'users/$uid/inbox/$istackId';
