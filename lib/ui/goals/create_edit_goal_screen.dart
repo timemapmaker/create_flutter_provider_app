@@ -98,7 +98,7 @@ class _CreateEditGoalScreenState extends State<CreateEditGoalScreen> {
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Theme.of(context).iconTheme.color, width: 2)),
-                  labelText: "Goal"//AppLocalizations.of(context).translate("todosCreateEditTaskNameTxt"),
+                  labelText: "Goal title"//AppLocalizations.of(context).translate("todosCreateEditTaskNameTxt"),
                 ),
               ),
             ],

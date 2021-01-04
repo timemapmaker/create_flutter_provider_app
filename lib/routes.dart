@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/ui/auth/register_screen.dart';
 import 'package:noteapp/ui/auth/sign_in_screen.dart';
 import 'package:noteapp/ui/goals/goal_screen.dart';
+import 'package:noteapp/ui/stacks/stack_screen.dart';
 import 'package:noteapp/ui/setting/setting_screen.dart';
 import 'package:noteapp/ui/splash/splash_screen.dart';
 import 'package:noteapp/ui/todo/create_edit_todo_screen.dart';
 import 'package:noteapp/ui/goals/create_edit_goal_screen.dart';
+import 'package:noteapp/ui/stacks/create_edit_stack.dart';
 import 'package:noteapp/ui/todo/todos_screen.dart';
 
 class Routes {
@@ -19,7 +20,10 @@ class Routes {
   static const String setting = '/setting';
   static const String create_edit_todo = '/create_edit_todo';
   static const String create_edit_goal = '/create_edit_goal';
+  static const String create_edit_stack = '/create_edit_stack';
   static const String goals = '/goals';
+  static const String stacks = '/stacks';
+
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
@@ -29,7 +33,9 @@ class Routes {
     setting: (BuildContext context) => SettingScreen(),
     create_edit_todo: (BuildContext context) => CreateEditTodoScreen(),
     create_edit_goal: (BuildContext context) => CreateEditGoalScreen(),
+    create_edit_stack: (BuildContext context) => CreateEditGoalStack(),
     goals: (BuildContext context) => goalScreen(),
+    stacks: (BuildContext context) => stackScreen(),
   };
 }
 

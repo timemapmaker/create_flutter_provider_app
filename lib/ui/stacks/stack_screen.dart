@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/goal_model.dart';
+import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/stack_model.dart';
-import 'package:noteapp/widgets/color_picker.dart';
 import 'package:noteapp/providers/auth_provider.dart';
 import 'package:noteapp/routes.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:noteapp/ui/todo/empty_content.dart';
 import 'package:provider/provider.dart';
 
-class goalScreen extends StatelessWidget {
+class StackScreenArguments {
+  GoalModel goal;
+  StackModel stack;
+  StackScreenArguments(this.goal, this.stack);
+}
+
+class stackScreen extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
+    GoalModel goal = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -32,10 +38,10 @@ class goalScreen extends StatelessWidget {
             }),
         actions: <Widget>[
           StreamBuilder(
-              stream: firestoreDatabase.goalStream(),
+              stream: firestoreDatabase.goalstacksStream(goalId: goal.id),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  List<GoalModel> goals = snapshot.data;
+                  List<StackModel> stacks = snapshot.data;
                   return Container(
                     width: 0,
                     height: 0,
@@ -53,27 +59,29 @@ class goalScreen extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed(
-            Routes.create_edit_goal,
+            Routes.create_edit_stack, arguments: goal.id
           );
         },
       ),
       bottomNavigationBar: bottomnav(),
-      body: WillPopScope(
-          onWillPop: () async => false, child: _buildBodySection(context)),
+      /*body: WillPopScope(
+          onWillPop: () async => false, child: _buildBodySection(context)),*/
+      body: _buildBodySection(context)
     );
   }
 
   Widget _buildBodySection(BuildContext context) {
     final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
+    GoalModel goal = ModalRoute.of(context).settings.arguments;
 
     return StreamBuilder(
-        stream: firestoreDatabase.goalStream(),
+        stream: firestoreDatabase.goalstacksStream(goalId: goal.id),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<GoalModel> goals = snapshot.data;
-            if (goals.isNotEmpty) {
+            List<StackModel> stacks = snapshot.data;
+            if (stacks.isNotEmpty) {
               return ListView.separated(
-                itemCount: goals.length,
+                itemCount: stacks.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
                     background: Container(
@@ -87,9 +95,9 @@ class goalScreen extends StatelessWidget {
                                 .canvasColor),
                           )),
                     ),
-                    key: Key(goals[index].id),
+                    key: Key(stacks[index].id),
                     onDismissed: (direction) {
-                      firestoreDatabase.deleteGoal(goals[index]);
+                      firestoreDatabase.deleteStack(stacks[index], goal.id);
                       _scaffoldKey.currentState.showSnackBar(SnackBar(
                         backgroundColor: Theme
                             .of(context)
@@ -97,7 +105,7 @@ class goalScreen extends StatelessWidget {
                             .color,
                         content: Text(
                           AppLocalizations.of(context).translate(
-                              "todosSnackBarContent") + goals[index].goalName,
+                              "todosSnackBarContent") + stacks[index].stackName,
                           style:
                           TextStyle(color: Theme
                               .of(context)
@@ -111,29 +119,22 @@ class goalScreen extends StatelessWidget {
                               .of(context)
                               .canvasColor,
                           onPressed: () {
-                            firestoreDatabase.setGoal(goals[index]);
                           },
                         ),
                       ));
                     },
                     child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 12.0,
-                        backgroundColor: goals[index].goalColor,),
-                      title: Text(goals[index].goalName),
+                      leading: Icon(Icons.folder, color: Colors.grey,),
+                      title: Text(stacks[index].stackName),
                       trailing: IconButton(
                           icon: const Icon(Icons.edit, color: Colors.grey, size: 18.0,),
                           onPressed: () {
                             Navigator.of(context).pushNamed(
-                              Routes.create_edit_goal,arguments:goals[index]
+                                Routes.create_edit_stack, arguments: goal.id
                             );
                           }
                       ),
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                            Routes.stacks,arguments: goals[index]
-                        );
-                      },
+                      onTap: () {},
                     ),
                   );
                 },
@@ -143,17 +144,17 @@ class goalScreen extends StatelessWidget {
               );
             } else {
               return
-              EmptyContentWidget(
-                title: AppLocalizations.of(context).translate("todosEmptyTopMsgDefaultTxt"),
-                message: AppLocalizations.of(context).translate("todosEmptyBottomDefaultMsgTxt"),
-              );
+                EmptyContentWidget(
+                  title: AppLocalizations.of(context).translate("todosEmptyTopMsgDefaultTxt"),
+                  message: AppLocalizations.of(context).translate("todosEmptyBottomDefaultMsgTxt"),
+                );
             }
           } else if (snapshot.hasError) {
             return
-            EmptyContentWidget(
-              title: AppLocalizations.of(context).translate("todosErrorTopMsgTxt"),
-              message: AppLocalizations.of(context).translate("todosErrorBottomMsgTxt"),
-            );
+              EmptyContentWidget(
+                title: AppLocalizations.of(context).translate("todosErrorTopMsgTxt"),
+                message: AppLocalizations.of(context).translate("todosErrorBottomMsgTxt"),
+              );
           }
           return Center(child: CircularProgressIndicator());
         });
