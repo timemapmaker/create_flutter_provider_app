@@ -19,7 +19,7 @@ Iterable<Color> goalColors = [
   Color(0xFFE6C9A9),
   Color(0xFFE9EAEE),
 ];
-final DefaultgoalColor = goalColors.last;
+final DefaultgoalColor = Color(0xFFFABD03);
 
 
 /// Goal color picker in a horizontal list style.

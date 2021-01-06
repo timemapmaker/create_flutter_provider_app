@@ -53,7 +53,7 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
             Navigator.of(context).pop();
           },
         ),
-        title: Text(_stackScreenTodoArguments.goal.goalName + ">" + _stackScreenTodoArguments.stack.stackName),
+        title: Text(_stackScreenTodoArguments.goal.goalName + " > " + _stackScreenTodoArguments.stack.stackName),
         actions: <Widget>[
           FlatButton(
               onPressed: () {

@@ -21,14 +21,16 @@ class goalScreen extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        leading: Container(
+              color: Colors.blueGrey,
+                child: Center(child: Text("tm", style:
+                TextStyle(fontSize: Theme.of(context).textTheme.headline4.fontSize,letterSpacing: 1.5,
+        )))),
         title: StreamBuilder(
             stream: authProvider.user,
             builder: (context, snapshot) {
               final UserModel user = snapshot.data;
-              return Text(user != null
-                  ? user.email + " - " +
-                  AppLocalizations.of(context).translate("homeAppBarTitle")
-                  : AppLocalizations.of(context).translate("homeAppBarTitle"));
+              return Center(child:Text("Goals"));
             }),
         actions: <Widget>[
           StreamBuilder(
@@ -118,8 +120,12 @@ class goalScreen extends StatelessWidget {
                     },
                     child: ListTile(
                       leading: CircleAvatar(
-                        radius: 12.0,
-                        backgroundColor: goals[index].goalColor,),
+                          radius: 18.0,
+                          backgroundColor: DefaultgoalColor,
+                          child: Padding(
+                              padding: EdgeInsets.all(7.0),
+                              child: Text('${index+1}'))
+                    ),
                       title: Text(goals[index].goalName),
                       trailing: IconButton(
                           icon: const Icon(Icons.edit, color: Colors.grey, size: 18.0,),

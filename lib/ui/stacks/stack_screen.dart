@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/models/goal_model.dart';
+import 'package:noteapp/widgets/color_picker.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/stack_model.dart';
 import 'package:noteapp/models/screen_arguments_model.dart';
@@ -26,7 +27,7 @@ class stackScreen extends StatelessWidget {
             stream: authProvider.user,
             builder: (context, snapshot) {
               final UserModel user = snapshot.data;
-              return Text(goal.goalName);
+              return Text(goal.goalName + " > Stacks");
             }),
         actions: <Widget>[
           StreamBuilder(
@@ -113,7 +114,7 @@ class stackScreen extends StatelessWidget {
                       ));
                     },
                     child: ListTile(
-                      leading: Icon(Icons.folder, color: Colors.grey,),
+                      leading: Icon(Icons.library_books, color: DefaultgoalColor,),
                       title: Text(stacks[index].stackName),
                       trailing: IconButton(
                           icon: const Icon(Icons.edit, color: Colors.grey, size: 18.0,),
@@ -136,11 +137,12 @@ class stackScreen extends StatelessWidget {
                 },
               );
             } else {
-              return
-                EmptyContentWidget(
-                  title: AppLocalizations.of(context).translate("todosEmptyTopMsgDefaultTxt"),
-                  message: AppLocalizations.of(context).translate("todosEmptyBottomDefaultMsgTxt"),
-                );
+              return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      children:[
+                        Text("Break down your goal into stacks."),
+                        Text("Push + to add a stack")]));
             }
           } else if (snapshot.hasError) {
             return

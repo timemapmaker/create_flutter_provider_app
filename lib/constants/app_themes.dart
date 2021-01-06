@@ -109,6 +109,9 @@ class AppThemes {
         labelStyle: TextStyle(
           color: _lightPrimaryColor,
         )),
+    tabBarTheme: TabBarTheme(
+      labelColor: _lightPrimaryColor,
+    )
   );
 
   //the dark theme
@@ -150,5 +153,9 @@ class AppThemes {
         labelStyle: TextStyle(
           color: _darkPrimaryColor,
         )),
+      tabBarTheme: TabBarTheme(
+        labelColor: _darkPrimaryColor,
+      )
   );
 }
+
