@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:provider/provider.dart';

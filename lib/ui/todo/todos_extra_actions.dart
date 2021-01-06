@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:provider/provider.dart';
 
@@ -25,11 +24,11 @@ class TodosExtraActions extends StatelessWidget {
       itemBuilder: (BuildContext context) => <PopupMenuEntry<TodosActions>>[
         PopupMenuItem<TodosActions>(
           value: TodosActions.toggleAllComplete,
-          child: Text(AppLocalizations.of(context).translate("todosPopUpToggleAllComplete")),
+          child: Text("Mark all complete"),
         ),
         PopupMenuItem<TodosActions>(
           value: TodosActions.clearCompleted,
-          child: Text(AppLocalizations.of(context).translate("todosPopUpToggleClearCompleted")),
+          child: Text("Clear all completed"),
         ),
       ],
     );

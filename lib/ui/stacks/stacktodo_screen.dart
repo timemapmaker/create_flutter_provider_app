@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/models/goal_model.dart';
-import 'package:noteapp/models/user_model.dart';
-import 'package:noteapp/models/stack_model.dart';
 import 'package:noteapp/models/screen_arguments_model.dart';
 import 'package:noteapp/models/stacktodo_model.dart';
 import 'package:noteapp/providers/auth_provider.dart';
@@ -23,32 +19,6 @@ class stacktodoScreen extends StatelessWidget {
 
     return Scaffold(
         key: _scaffoldKey,
-        /*appBar: AppBar(
-          title: StreamBuilder(
-              stream: authProvider.user,
-              builder: (context, snapshot) {
-                final UserModel user = snapshot.data;
-                return Text((inargs.goal.goalName) + " > " + (inargs.stack.stackName));
-              }),
-          actions: <Widget>[
-            StreamBuilder(
-                stream: firestoreDatabase.goalstacktodosStream(goalId: inargs.goal.id, stackId: inargs.stack.id),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<StackTodoModel> stacktodos = snapshot.data;
-                    return Container(
-                      width: 0,
-                      height: 0,
-                    );
-                  }
-                }),
-            IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(Routes.setting);
-                }),
-          ],
-        ),*/
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
@@ -80,8 +50,7 @@ class stacktodoScreen extends StatelessWidget {
                       color: Colors.red,
                       child: Center(
                           child: Text(
-                            AppLocalizations.of(context).translate(
-                                "todosDismissibleMsgTxt"),
+                            "Delete",
                             style: TextStyle(color: Theme
                                 .of(context)
                                 .canvasColor),
@@ -95,7 +64,7 @@ class stacktodoScreen extends StatelessWidget {
                             .of(context)
                             .appBarTheme
                             .color,
-                        content: Text(stacktodos[index].task,
+                        content: Text("Deleted " + stacktodos[index].task,
                           style:
                           TextStyle(color: Theme
                               .of(context)
@@ -103,8 +72,7 @@ class stacktodoScreen extends StatelessWidget {
                         ),
                         duration: Duration(seconds: 3),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context).translate(
-                              "todosSnackBarActionLbl"),
+                          label: "Undo",
                           textColor: Theme
                               .of(context)
                               .canvasColor,
@@ -142,15 +110,15 @@ class stacktodoScreen extends StatelessWidget {
             } else {
               return
                 EmptyContentWidget(
-                  title: AppLocalizations.of(context).translate("todosEmptyTopMsgDefaultTxt"),
-                  message: AppLocalizations.of(context).translate("todosEmptyBottomDefaultMsgTxt"),
+                  title: "Nothing Here",
+                  message: "Add a new item to get started",
                 );
             }
           } else if (snapshot.hasError) {
             return
               EmptyContentWidget(
-                title: AppLocalizations.of(context).translate("todosErrorTopMsgTxt"),
-                message: AppLocalizations.of(context).translate("todosErrorBottomMsgTxt"),
+                title: "Something went wrong",
+                message: "Can't load data right now",
               );
           }
           return Center(child: CircularProgressIndicator());

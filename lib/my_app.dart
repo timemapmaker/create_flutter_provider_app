@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/auth_widget_builder.dart';
 import 'package:noteapp/constants/app_themes.dart';
 import 'package:noteapp/flavor.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/providers/auth_provider.dart';
-import 'package:noteapp/providers/language_provider.dart';
 import 'package:noteapp/providers/theme_provider.dart';
 import 'package:noteapp/routes.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:noteapp/ui/auth/sign_in_screen.dart';
 import 'package:noteapp/ui/home/home.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key, this.databaseBuilder}) : super(key: key);
@@ -28,19 +25,18 @@ class MyApp extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (_, themeProviderRef, __) {
         //{context, data, child}
-        return Consumer<LanguageProvider>(
+        return /*Consumer<LanguageProvider>(
           builder: (_, languageProviderRef, __) {
-            return AuthWidgetBuilder(
+            return */AuthWidgetBuilder(
               databaseBuilder: databaseBuilder,
               builder: (BuildContext context,
                   AsyncSnapshot<UserModel> userSnapshot) {
                 return MaterialApp(
                   debugShowCheckedModeBanner: false,
-                  locale: languageProviderRef.appLocale,
+                  /*locale: languageProviderRef.appLocale,
                   //List of all supported locales
                   supportedLocales: [
                     Locale('en', 'US'),
-                    Locale('zh', 'CN'),
                   ],
                   //These delegates make sure that the localization data for the proper language is loaded
                   localizationsDelegates: [
@@ -64,7 +60,7 @@ class MyApp extends StatelessWidget {
                     //if the locale from the mobile device is not supported yet,
                     //user the first one from the list (in our case, that will be English)
                     return supportedLocales.first;
-                  },
+                  },*/
                   title: Provider.of<Flavor>(context).toString(),
                   routes: Routes.routes,
                   theme: AppThemes.lightTheme,
@@ -91,7 +87,6 @@ class MyApp extends StatelessWidget {
             );
           },
         );
-      },
-    );
   }
 }
+

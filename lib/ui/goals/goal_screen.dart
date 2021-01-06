@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/goal_model.dart';
-import 'package:noteapp/models/stack_model.dart';
 import 'package:noteapp/widgets/color_picker.dart';
 import 'package:noteapp/providers/auth_provider.dart';
 import 'package:noteapp/routes.dart';
@@ -82,8 +80,7 @@ class goalScreen extends StatelessWidget {
                       color: Colors.red,
                       child: Center(
                           child: Text(
-                            AppLocalizations.of(context).translate(
-                                "todosDismissibleMsgTxt"),
+                            "Delete",
                             style: TextStyle(color: Theme
                                 .of(context)
                                 .canvasColor),
@@ -98,8 +95,7 @@ class goalScreen extends StatelessWidget {
                             .appBarTheme
                             .color,
                         content: Text(
-                          AppLocalizations.of(context).translate(
-                              "todosSnackBarContent") + goals[index].goalName,
+                          "Deleted" + goals[index].goalName,
                           style:
                           TextStyle(color: Theme
                               .of(context)
@@ -107,8 +103,7 @@ class goalScreen extends StatelessWidget {
                         ),
                         duration: Duration(seconds: 3),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context).translate(
-                              "todosSnackBarActionLbl"),
+                          label: "Undo",
                           textColor: Theme
                               .of(context)
                               .canvasColor,
@@ -150,15 +145,15 @@ class goalScreen extends StatelessWidget {
             } else {
               return
               EmptyContentWidget(
-                title: AppLocalizations.of(context).translate("todosEmptyTopMsgDefaultTxt"),
-                message: AppLocalizations.of(context).translate("todosEmptyBottomDefaultMsgTxt"),
+                title: "Nothing here",
+                message: "Push + to add a goal",
               );
             }
           } else if (snapshot.hasError) {
             return
             EmptyContentWidget(
-              title: AppLocalizations.of(context).translate("todosErrorTopMsgTxt"),
-              message: AppLocalizations.of(context).translate("todosErrorBottomMsgTxt"),
+              title: "Something went wrong",
+              message: "Can't load data right now",
             );
           }
           return Center(child: CircularProgressIndicator());

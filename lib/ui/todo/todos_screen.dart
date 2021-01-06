@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/models/todo_model.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/providers/auth_provider.dart';
@@ -27,9 +26,7 @@ class TodosScreen extends StatelessWidget {
             stream: authProvider.user,
             builder: (context, snapshot) {
               final UserModel user = snapshot.data;
-              return Text(user != null
-                  ? user.email + " - " + AppLocalizations.of(context).translate("homeAppBarTitle")
-                  : AppLocalizations.of(context).translate("homeAppBarTitle"));
+              return Text("Inbox");
             }),
         actions: <Widget>[
           StreamBuilder(
@@ -86,7 +83,7 @@ class TodosScreen extends StatelessWidget {
                       color: Colors.red,
                       child: Center(
                           child: Text(
-                            AppLocalizations.of(context).translate("todosDismissibleMsgTxt"),
+                            "Delete",
                         style: TextStyle(color: Theme.of(context).canvasColor),
                       )),
                     ),
@@ -97,13 +94,13 @@ class TodosScreen extends StatelessWidget {
                       _scaffoldKey.currentState.showSnackBar(SnackBar(
                         backgroundColor: Theme.of(context).appBarTheme.color,
                         content: Text(
-                          AppLocalizations.of(context).translate("todosSnackBarContent") + todos[index].task,
+                          "Deleted" + todos[index].task,
                           style:
                               TextStyle(color: Theme.of(context).canvasColor),
                         ),
                         duration: Duration(seconds: 3),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context).translate("todosSnackBarActionLbl"),
+                          label: "Undo",
                           textColor: Theme.of(context).canvasColor,
                           onPressed: () {
                             firestoreDatabase.setTodo(todos[index]);
@@ -136,14 +133,14 @@ class TodosScreen extends StatelessWidget {
               );
             } else {
               return EmptyContentWidget(
-                title: AppLocalizations.of(context).translate("todosEmptyTopMsgDefaultTxt"),
-                message: AppLocalizations.of(context).translate("todosEmptyBottomDefaultMsgTxt"),
+                title: "Nothing Here",
+                message: "Add a new item to get started",
               );
             }
           } else if (snapshot.hasError) {
             return EmptyContentWidget(
-              title: AppLocalizations.of(context).translate("todosErrorTopMsgTxt"),
-              message: AppLocalizations.of(context).translate("todosErrorBottomMsgTxt"),
+              title: "Something went wrong",
+              message: "Can't load data right now",
             );
           }
           return Center(child: CircularProgressIndicator());

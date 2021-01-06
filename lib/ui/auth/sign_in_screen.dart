@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/flavor.dart';
 import 'package:noteapp/providers/auth_provider.dart';
 import 'package:noteapp/routes.dart';
@@ -69,16 +68,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   controller: _emailController,
                   style: Theme.of(context).textTheme.body1,
                   validator: (value) => value.isEmpty
-                      ? AppLocalizations.of(context)
-                          .translate("loginTxtErrorEmail")
+                      ? "Please enter an email"
                       : null,
                   decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.email,
                         color: Theme.of(context).iconTheme.color,
                       ),
-                      labelText: AppLocalizations.of(context)
-                          .translate("loginTxtEmail"),
+                      labelText: "Email",
                       border: OutlineInputBorder()),
                 ),
                 Padding(
@@ -89,16 +86,14 @@ class _SignInScreenState extends State<SignInScreen> {
                     controller: _passwordController,
                     style: Theme.of(context).textTheme.body1,
                     validator: (value) => value.length < 6
-                        ? AppLocalizations.of(context)
-                            .translate("loginTxtErrorPassword")
+                        ? "Please enter a password with at least 6+ chars"
                         : null,
                     decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.lock,
                           color: Theme.of(context).iconTheme.color,
                         ),
-                        labelText: AppLocalizations.of(context)
-                            .translate("loginTxtPassword"),
+                        labelText: "Password",
                         border: OutlineInputBorder()),
                   ),
                 ),
@@ -108,8 +103,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       )
                     : RaisedButton(
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate("loginBtnSignIn"),
+                          "Sign in",
                           style: Theme.of(context).textTheme.button,
                         ),
                         onPressed: () async {
@@ -124,8 +118,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                             if (!status) {
                               _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                content: Text(AppLocalizations.of(context)
-                                    .translate("loginTxtErrorSignIn")),
+                                content: Text("Invalid email and/or password"),
                               ));
                             }
                           }
@@ -138,8 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         padding: const EdgeInsets.only(top: 48),
                         child: Center(
                             child: Text(
-                          AppLocalizations.of(context)
-                              .translate("loginTxtDontHaveAccount"),
+                              "Don't have an account?",
                           style: Theme.of(context).textTheme.button,
                         )),
                       ),
@@ -148,8 +140,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: null,
                       )
                     : FlatButton(
-                        child: Text(AppLocalizations.of(context)
-                            .translate("loginBtnLinkCreateAccount")),
+                        child: Text("Create account"),
                         textColor: Theme.of(context).iconTheme.color,
                         onPressed: () {
                           Navigator.of(context)
@@ -158,14 +149,14 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                 Center(
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 70,
-                    ),
-                    Text(
-                      Provider.of<Flavor>(context).toString(),
-                      style: Theme.of(context).textTheme.body2,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 70,
+                        ),
+                        Text(
+                          Provider.of<Flavor>(context).toString(),
+                          style: Theme.of(context).textTheme.body2,
                     ),
                   ],
                 )),

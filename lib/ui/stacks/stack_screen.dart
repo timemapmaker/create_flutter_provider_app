@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/widgets/color_picker.dart';
 import 'package:noteapp/models/user_model.dart';
@@ -80,8 +79,7 @@ class stackScreen extends StatelessWidget {
                       color: Colors.red,
                       child: Center(
                           child: Text(
-                            AppLocalizations.of(context).translate(
-                                "todosDismissibleMsgTxt"),
+                            ("Deleted"),
                             style: TextStyle(color: Theme
                                 .of(context)
                                 .canvasColor),
@@ -103,8 +101,7 @@ class stackScreen extends StatelessWidget {
                         ),
                         duration: Duration(seconds: 3),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context).translate(
-                              "todosSnackBarActionLbl"),
+                          label: "Undo",
                           textColor: Theme
                               .of(context)
                               .canvasColor,
@@ -137,18 +134,15 @@ class stackScreen extends StatelessWidget {
                 },
               );
             } else {
-              return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                      children:[
-                        Text("Break down your goal into stacks."),
-                        Text("Push + to add a stack")]));
+              return EmptyContentWidget(
+                  title: "Break down your goal into stacks.",
+                  message: "Push + to add a stack");
             }
           } else if (snapshot.hasError) {
             return
               EmptyContentWidget(
-                title: AppLocalizations.of(context).translate("todosErrorTopMsgTxt"),
-                message: AppLocalizations.of(context).translate("todosErrorBottomMsgTxt"),
+                title: "Something went wrong",
+                message: "Can't load data right now",
               );
           }
           return Center(child: CircularProgressIndicator());

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/models/stack_model.dart';
 import 'package:noteapp/models/screen_arguments_model.dart';
 import 'package:noteapp/services/firestore_database.dart';
@@ -48,8 +46,8 @@ class _CreateEditGoalStackState extends State<CreateEditGoalStack> {
           },
         ),
         title: Text(_stack != null
-            ? _stack.stackName //AppLocalizations.of(context).translate("todosCreateEditAppBarTitleEditTxt")
-            : ""),//AppLocalizations.of(context).translate("todosCreateEditAppBarTitleNewTxt")),
+            ? _stack.stackName
+            : ""),
         actions: <Widget>[
           FlatButton(
               onPressed: () {
@@ -93,13 +91,13 @@ class _CreateEditGoalStackState extends State<CreateEditGoalStack> {
                 controller: _stackNameController,
                 style: Theme.of(context).textTheme.body1,
                 validator: (value) => value.isEmpty
-                    ? "Nothing here" //AppLocalizations.of(context).translate("todosCreateEditTaskNameValidatorMsg")
+                    ? "Nothing here"
                     : null,
                 decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                             color: Theme.of(context).iconTheme.color, width: 2)),
-                    labelText: "Stack Name"//AppLocalizations.of(context).translate("todosCreateEditTaskNameTxt"),
+                    labelText: "Stack Name"
                 ),
               ),
             ],

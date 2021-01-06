@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/models/stacktodo_model.dart';
 import 'package:noteapp/models/screen_arguments_model.dart';
 import 'package:noteapp/services/firestore_database.dart';
@@ -15,7 +14,6 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
   TextEditingController _extraNoteController;
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  //final StacktodoScreenArguments args = null;
   StackTodoModel _stacktodo;
   bool _checkboxCompleted;
 
@@ -110,7 +108,7 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
                 controller: _taskController,
                 style: Theme.of(context).textTheme.body1,
                 validator: (value) => value.isEmpty
-                    ? AppLocalizations.of(context).translate("todosCreateEditTaskNameValidatorMsg")
+                    ? "Name can't be empty"
                     : null,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
@@ -130,7 +128,7 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
                         borderSide: BorderSide(
                             color: Theme.of(context).iconTheme.color,
                             width: 2)),
-                    labelText: AppLocalizations.of(context).translate("todosCreateEditNotesTxt"),
+                    labelText: "Notes",
                     alignLabelWithHint: true,
                     contentPadding: new EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 10.0),
@@ -142,7 +140,7 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(AppLocalizations.of(context).translate("todosCreateEditCompletedTxt")),
+                    Text("Completed ?"),
                     Checkbox(
                         value: _checkboxCompleted,
                         onChanged: (value) {

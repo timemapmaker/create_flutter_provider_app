@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
 import 'package:noteapp/models/todo_model.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:provider/provider.dart';
@@ -49,9 +48,7 @@ class _CreateEditTodoScreenState extends State<CreateEditTodoScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: Text(_todo != null
-            ? AppLocalizations.of(context).translate("todosCreateEditAppBarTitleEditTxt")
-            : AppLocalizations.of(context).translate("todosCreateEditAppBarTitleNewTxt")),
+        title: Text("Inbox Todo"),
         actions: <Widget>[
           FlatButton(
               onPressed: () {
@@ -104,13 +101,13 @@ class _CreateEditTodoScreenState extends State<CreateEditTodoScreen> {
                 controller: _taskController,
                 style: Theme.of(context).textTheme.body1,
                 validator: (value) => value.isEmpty
-                    ? AppLocalizations.of(context).translate("todosCreateEditTaskNameValidatorMsg")
+                    ? "Name can't be empty"
                     : null,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Theme.of(context).iconTheme.color, width: 2)),
-                  labelText: AppLocalizations.of(context).translate("todosCreateEditTaskNameTxt"),
+                  labelText: "Name",
                 ),
               ),
               Padding(
@@ -124,7 +121,7 @@ class _CreateEditTodoScreenState extends State<CreateEditTodoScreen> {
                         borderSide: BorderSide(
                             color: Theme.of(context).iconTheme.color,
                             width: 2)),
-                    labelText: AppLocalizations.of(context).translate("todosCreateEditNotesTxt"),
+                    labelText: "Note",
                     alignLabelWithHint: true,
                     contentPadding: new EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 10.0),
@@ -136,7 +133,7 @@ class _CreateEditTodoScreenState extends State<CreateEditTodoScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(AppLocalizations.of(context).translate("todosCreateEditCompletedTxt")),
+                    Text("Completed ?"),
                     Checkbox(
                         value: _checkboxCompleted,
                         onChanged: (value) {

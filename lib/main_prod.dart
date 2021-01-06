@@ -26,9 +26,9 @@ void main() {
           ChangeNotifierProvider<AuthProvider>(
             create: (context) => AuthProvider(),
           ),
-          ChangeNotifierProvider<LanguageProvider>(
+          /*ChangeNotifierProvider<LanguageProvider>(
             create: (context) => LanguageProvider(),
-          ),
+          ),*/
         ],
         child: MyApp(
           databaseBuilder: (_, uid) => FirestoreDatabase(uid: uid),
