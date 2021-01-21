@@ -7,6 +7,8 @@ This class work together with FirestoreService and FirestoreDatabase.
 class FirestorePath {
   static String todo(String uid, String todoId) => 'users/$uid/todos/$todoId';
   static String todos(String uid) => 'users/$uid/todos';
+  static String event(String uid, String eventId) => 'users/$uid/events/$eventId';
+  static String events(String uid) => 'users/$uid/events';
   static String user(String uid) => 'users';
   static String goals(String uid) => 'users/$uid/goals';
   static String goal(String uid, String goalId) => 'users/$uid/goals/$goalId';

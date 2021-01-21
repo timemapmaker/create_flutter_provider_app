@@ -6,6 +6,7 @@ import 'package:noteapp/routes.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:noteapp/ui/todo/empty_content.dart';
 import 'package:provider/provider.dart';
+import 'package:noteapp/widgets/appointment_editor.dart';
 
 class stacktodoScreen extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -100,6 +101,15 @@ class stacktodoScreen extends StatelessWidget {
                             arguments: StacktodoScreenArguments(outargs.goal, outargs.stack, stacktodos[index], null)
                         );
                       },
+                      trailing: IconButton(
+                          icon: const Icon(Icons.schedule_send, color: Colors.grey, size: 18.0,),
+                          onPressed: () {
+                            Navigator.push<Widget>(
+                                context,
+                                MaterialPageRoute(
+                                builder: (BuildContext context) => AppointmentEditor()));
+                          }
+                      ),
                     ),
                   );
                 },

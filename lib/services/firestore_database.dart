@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:noteapp/models/todo_model.dart';
+import 'package:noteapp/models/event_model.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/models/stacktodo_model.dart';
@@ -44,6 +45,12 @@ class FirestoreDatabase {
         data: todo.toMap(),
       );
 
+  //Method to create/update eventModel
+  Future<void> setEvent(EventModel event) async => await _firestoreService.setData(
+    path: FirestorePath.event(uid, event.id),
+    data: event.toMap(),
+  );
+
   //Method to create/update goalModel
   Future<void> setGoal(GoalModel goal) async => await _firestoreService.setData(
     path: FirestorePath.goal(uid, goal.id),
@@ -73,6 +80,11 @@ class FirestoreDatabase {
     await _firestoreService.deleteData(path: FirestorePath.todo(uid, todo.id));
   }
 
+  //Method to delete eventModel entry
+  Future<void> deleteEvent(EventModel event) async {
+    await _firestoreService.deleteData(path: FirestorePath.todo(uid, event.id));
+  }
+
   //Method to delete goal entry
   Future<void> deleteGoal(GoalModel goal) async {
     await _firestoreService.deleteData(path: FirestorePath.goal(uid, goal.id));
@@ -98,6 +110,13 @@ class FirestoreDatabase {
       _firestoreService.documentStream(
         path: FirestorePath.todo(uid, todoId),
         builder: (data, documentId) => TodoModel.fromMap(data, documentId),
+      );
+
+  //Method to retrieve eventModel object based on the given eventId
+  Stream<EventModel> eventStream({@required String eventId}) =>
+      _firestoreService.documentStream(
+        path: FirestorePath.event(uid, eventId),
+        builder: (data, documentId) => EventModel.fromMap(data, documentId),
       );
 
   //Method to retrieve stackModel object based on the given stackId and goalid
@@ -133,6 +152,12 @@ class FirestoreDatabase {
         builder: (data, documentId) => TodoModel.fromMap(data, documentId),
       );
 
+  //Method to retrieve all event item from the same user based on userid
+  Stream<List<EventModel>> eventsStream() => _firestoreService.collectionStream(
+    path: FirestorePath.events(uid),
+    builder: (data, documentId) => EventModel.fromMap(data, documentId),
+  );
+
   //Method to retrieve all stacks items from the same user based on uid and goalid
   Stream<List<StackModel>> goalstacksStream({@required String goalId}) => _firestoreService.collectionStream(
     path: FirestorePath.goalstacks(uid, goalId),
@@ -150,6 +175,17 @@ class FirestoreDatabase {
     path: FirestorePath.goalstacknotes(uid, goalId, stackId),
     builder: (data, documentId) => StackNoteModel.fromMap(data, documentId),
   );
+
+  //Method to collect all eventModels for a user
+  Future<List<DocumentSnapshot>> allEvents() async {
+    //List events;
+    final List<DocumentSnapshot> querySnapshot = (await Firestore.instance
+        .collection(FirestorePath.events(uid)).getDocuments()).documents;
+
+    //events = querySnapshot/*.toList()*/;
+
+    return querySnapshot;
+  }
 
   //Method to mark all todoModel to be complete
   Future<void> setAllTodoComplete() async {

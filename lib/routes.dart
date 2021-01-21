@@ -14,6 +14,7 @@ import 'package:noteapp/ui/stacks/create_edit_stacktodo.dart';
 import 'package:noteapp/ui/stacks/stacknote_screen.dart';
 import 'package:noteapp/ui/stacks/create_edit_stacknote.dart';
 import 'package:noteapp/ui/todo/todos_screen.dart';
+import 'package:noteapp/ui/calendar/calendar_screen.dart';
 
 class Routes {
   Routes._(); //this is to prevent anyone from instantiate this object
@@ -33,6 +34,7 @@ class Routes {
   static const String stacktodos = '/stacktodos';
   static const String stacknotes = '/stacknotes';
   static const String stackdetails = '/stackdetails';
+  static const String calendar = '/calendar';
 
 
   static final routes = <String, WidgetBuilder>{
@@ -51,6 +53,7 @@ class Routes {
     stacknotes: (BuildContext context) => stacknoteScreen(),
     create_edit_stacknotes: (BuildContext context) => CreateEditStackNote(),
     stackdetails: (BuildContext context) => stackdetailScreen(),
+    calendar: (BuildContext context) => calendarScreen(),
   };
 }
 
@@ -75,7 +78,9 @@ class bottomnav extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.calendar_today, color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor, size: 20.0,),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.calendar);
+              },
             ),
             IconButton(
               icon: Icon(Icons.timer, color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor),
