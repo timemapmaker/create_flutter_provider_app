@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:noteapp/models/stacktodo_model.dart';
 
 class EventModel {
   final String id;
@@ -9,6 +10,7 @@ class EventModel {
   final Color background;
   final bool isAllDay;
   final String description;
+  final StackTodoModel stacktodo;
 
 
   EventModel(
@@ -19,6 +21,7 @@ class EventModel {
         this.isAllDay = false,
         this.eventName = '',
         this.description = '',
+        this.stacktodo = null,
       });
 
   factory EventModel.fromMap(Map<String, dynamic> data, String documentId) {
@@ -32,19 +35,22 @@ class EventModel {
     Color background = data['background'];
     bool isAllDay = data['isAllDay'];
     String description = data['description'];
+    StackTodoModel stacktodo = data['stacktodo'];
 
     return EventModel(
-        id: documentId, eventName: eventName, from: from, to: to, background: background, isAllDay: isAllDay, description: description);
+        id: documentId, eventName: eventName, from: from, to: to, background: background, isAllDay: isAllDay, description: description, stacktodo: stacktodo);
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'eventId': id,
       'eventName': eventName,
       'from': from,
       'to': to,
       'background': background,
       'isAllDay': isAllDay,
       'description': description,
+      'stacktodo': stacktodo,
     };
   }
 }

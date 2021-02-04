@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/event_model.dart';
@@ -5,18 +7,31 @@ import 'package:noteapp/providers/auth_provider.dart';
 import 'package:noteapp/routes.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:provider/provider.dart';
-import 'package:noteapp/ui/calendar/calendar_widget.dart';
-import 'package:noteapp/ui/todo/empty_content.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:noteapp/widgets/appointment_editor.dart';
 
+CalendarController _controller;
+Color headerColor, viewHeaderColor, calendarColor, defaultColor;
+MeetingDataSource _events;
+Meeting _selectedAppointment;
+DateTime _startDate;
+TimeOfDay _startTime;
+DateTime _endDate;
+TimeOfDay _endTime;
+bool _isAllDay;
+String _subject = '';
+String _notes = '';
+String _eventid='';
 
-
-class calendarScreen extends StatelessWidget {
+class calendarScreen extends StatelessWidget{
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
+    final firestoreDatabase = Provider.of<FirestoreDatabase>(
+        context, listen: false);
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -39,127 +54,201 @@ class calendarScreen extends StatelessWidget {
       ),
       bottomNavigationBar: bottomnav(),
       body: WillPopScope(
-          onWillPop: () async => false, child:/*_buildcalendarbody(context)*/LoadDataFromFireStore()),
-      //Container(child: EventCalendar()),
+          onWillPop: () async => false,
+          child: LoadDataFromFireStore()),
     );
   }
+}
 
-  Widget _buildcalendarbody(BuildContext context) {
-    final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
-    return StreamBuilder(
-        stream: firestoreDatabase.eventsStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-                List<EventModel> events = snapshot.data;
-                if (events.isNotEmpty) {
-                  return ListView.separated(
-                    itemCount: events.length,
-                    itemBuilder: (context, index) {
-                      return Dismissible(
-                        background: Container(
-                          color: Colors.red,
-                          child: Center(
-                              child: Text(
-                                "Delete",
-                                style: TextStyle(color: Theme
-                                    .of(context)
-                                    .canvasColor),
-                              )),
-                        ),
-                        key: Key(events[index].id),
-                        onDismissed: (direction) {
-                          firestoreDatabase.deleteEvent(events[index]);
-                          _scaffoldKey.currentState.showSnackBar(SnackBar(
-                            backgroundColor: Theme
-                                .of(context)
-                                .appBarTheme
-                                .color,
-                            content: Text(
-                              "Deleted" + events[index].eventName,
-                              style:
-                              TextStyle(color: Theme
-                                  .of(context)
-                                  .canvasColor),
-                            ),
-                            duration: Duration(seconds: 3),
-                            action: SnackBarAction(
-                              label: "Undo",
-                              textColor: Theme
-                                  .of(context)
-                                  .canvasColor,
-                              onPressed: () {
-                                firestoreDatabase.setEvent(events[index]);
-                              },
-                            ),
-                          ));
-                        },
-                        child: ListTile(
-                          leading: CircleAvatar(
-                              radius: 18.0,
-                              backgroundColor: Colors.white,
-                              child: Padding(
-                                  padding: EdgeInsets.all(7.0),
-                                  child: Text('${index + 1}'))
-                          ),
-                          title: Text(events[index].eventName),
-                          trailing: IconButton(
-                              icon: const Icon(
-                                Icons.edit, color: Colors.grey, size: 18.0,),
-                              onPressed: () {}
-                          ),
-                          onTap: () {},
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(height: 0.5, color: Colors.grey,);
-                    },
-                  );
-                }
-                else {
-                  return Center(child: Text("No data"));
-                }
-              }
-              else if (snapshot.hasError) {
-                return EmptyContentWidget(
-                    title: "Something went wrong",
-                    message: "Can't load data right now",
-                  );
-              }
-              return Center(child: Text("Some issue with the data"));
-            }
-        );
+class LoadDataFromFireStore extends StatefulWidget {
+  @override
+  LoadDataFromFireStoreState createState() => LoadDataFromFireStoreState();
+}
+
+class LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
+  List<DocumentSnapshot> querySnapshot;
+  dynamic data;
+  List<Color> _colorCollection;
+
+  @override
+  void initState() {
+  _initializeEventColor();
+  _controller = CalendarController();
+  _controller.view = CalendarView.month;
+  final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
+  firestoreDatabase.allEvents().then((results) {
+    setState(() {
+      if (results != null) {
+        querySnapshot = results;
+      }
+    });
+  });
+  super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+  return Scaffold(
+    body: _showCalendar(),
+  );
+  }
 
 
-    /* StreamBuilder(
-        stream: firestoreDatabase.eventsStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<EventModel> querysnapshot = snapshot.data;
-            List<Meeting> events = getDataFromDatabase(querysnapshot);
-            _events = DataSource(events);
-            return Scaffold(
-                resizeToAvoidBottomInset: false,
-                resizeToAvoidBottomPadding: false,
-                body: Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                    child: getEventCalendar(
-                        _calendarView, _events,
-                        onCalendarTapped)));
-          }
-          else{return Container(width: 0.0, height: 0.0);}
-        });*/
+  _showCalendar() {
+    if (querySnapshot != null) {
+      List<Meeting> collection;
+      for (DocumentSnapshot snapshotdata in querySnapshot) {
+        Map<dynamic, dynamic> values = snapshotdata.data;
+        if (values != null) {
+          data = values;
+          collection ??= <Meeting>[];
+          final Random random = new Random();
+          collection.add(Meeting(
+            eventId: data['eventId'],
+              eventName: data['eventName'],
+              isAllDay: false,
+              from: data['from'].toDate(),
+              to: data['to'].toDate(),
+              background: _colorCollection[random.nextInt(9)]));
+        }
+        else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      }
 
+      return SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SfCalendar(
+                  view: _controller.view,
+                  allowedViews: <CalendarView>
+                  [
+                    CalendarView.day,
+                    CalendarView.week,
+                    CalendarView.workWeek,
+                    CalendarView.month,
+                    CalendarView.schedule
+                  ],
+                  onTap: onCalendarTapped,
+                  showDatePickerButton: true,
+                  initialDisplayDate: DateTime.now(),
+                  dataSource: _getCalendarDataSource(collection),
+                  monthViewSettings: MonthViewSettings(showAgenda: true),
+                ),
+              ),
+            ],
+          ));
+    }
+  }
+
+  void onCalendarTapped(CalendarTapDetails calendarTapDetails) {
+    if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
+        calendarTapDetails.targetElement != CalendarElement.appointment) {
+      return;
+    }
+
+    setState(() {
+      _selectedAppointment = null;
+      _eventid = '';
+      _isAllDay = false;
+      _subject = '';
+      _notes = '';
+      if (_controller.view == CalendarView.month) {
+        _controller.view = CalendarView.day;
+      } else {
+        if (calendarTapDetails.appointments != null &&
+            calendarTapDetails.appointments.length == 1) {
+          final Meeting meetingDetails = calendarTapDetails.appointments[0];
+          _eventid = meetingDetails.eventId;
+          _startDate = meetingDetails.from;
+          _endDate = meetingDetails.to;
+          _isAllDay = meetingDetails.isAllDay;
+          _subject = meetingDetails.eventName == '(No title)'
+              ? ''
+              : meetingDetails.eventName;
+          _selectedAppointment = meetingDetails;
+        } else {
+          final DateTime date = calendarTapDetails.date;
+          _startDate = date;
+          _endDate = date.add(const Duration(hours: 1));
+        }
+        _startTime =
+            TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
+        _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
+      }
+    });
+    String idvalue = _eventid;
+
+    Navigator.of(context).pushNamed(
+        Routes.appointment,
+        arguments: idvalue);
+  }
+
+  void _initializeEventColor() {
+    this._colorCollection = new List<Color>();
+    _colorCollection.add(const Color(0xFF0F8644));
+    _colorCollection.add(const Color(0xFF8B1FA9));
+    _colorCollection.add(const Color(0xFFD20100));
+    _colorCollection.add(const Color(0xFFFC571D));
+    _colorCollection.add(const Color(0xFF36B37B));
+    _colorCollection.add(const Color(0xFF01A1EF));
+    _colorCollection.add(const Color(0xFF3D4FB5));
+    _colorCollection.add(const Color(0xFFE47C73));
+    _colorCollection.add(const Color(0xFF636363));
+    _colorCollection.add(const Color(0xFF0A8043));
+  }
+}
+
+MeetingDataSource _getCalendarDataSource([List<Meeting> collection]) {
+  List<Meeting> meetings = collection ?? <Meeting>[];
+  return MeetingDataSource(meetings);
+}
+
+class MeetingDataSource extends CalendarDataSource {
+  MeetingDataSource(List<Meeting> source) {
+    appointments = source;
+  }
+
+  @override
+  String getId(int index) {
+    return appointments[index].id;
+  }
+
+  @override
+  DateTime getStartTime(int index) {
+    return appointments[index].from;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return appointments[index].to;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return appointments[index].isAllDay;
+  }
+
+  @override
+  String getSubject(int index) {
+    return appointments[index].eventName;
+  }
+
+  @override
+  Color getColor(int index) {
+    return appointments[index].background;
   }
 }
 
 class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
+  Meeting({this.eventId, this.eventName, this.from, this.to, this.background, this.isAllDay});
+  String eventId;
   String eventName;
   DateTime from;
   DateTime to;
   Color background;
   bool isAllDay;
 }
-

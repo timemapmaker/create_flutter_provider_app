@@ -1,9 +1,11 @@
 import 'package:noteapp/models/event_model.dart';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:noteapp/services/firestore_database.dart';
 import 'package:provider/provider.dart';
+import 'package:noteapp/models/stacktodo_model.dart';
+import 'package:noteapp/models/screen_arguments_model.dart';
+
 
 DateTime _startDate;
 TimeOfDay _startTime;
@@ -12,7 +14,7 @@ TimeOfDay _endTime;
 bool _isAllDay;
 String _subject;
 String _notes;
-EventModel _event = null;
+String _eventId;
 
 class AppointmentEditor extends StatefulWidget {
   @override
@@ -29,13 +31,26 @@ class AppointmentEditorState extends State<AppointmentEditor> {
     _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
     _subject = '';
     _notes = 'Notes';
+    _eventId='';
     _isAllDay = false;
     super.initState();
   }
 
   Widget _getAppointmentEditor(BuildContext context) {
+    final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
+    StackTodoModel _stacktodo = ModalRoute.of(context).settings.arguments;
+    if (_stacktodo != null) {
+    firestoreDatabase.eventdoc(eventId: _stacktodo.id).then((val) => setState(() {
+      EventModel eventtoedit = val;
+      _subject = eventtoedit.eventName;
+      _startDate = eventtoedit.from;
+      _endDate = eventtoedit.to;
+      _isAllDay = eventtoedit.isAllDay;
+    }));
+        }
+
     return Container(
-        color: Colors.white,
+        //color: Colors.white,
         child: ListView(
           padding: const EdgeInsets.all(0),
           children: <Widget>[
@@ -258,8 +273,17 @@ class AppointmentEditorState extends State<AppointmentEditor> {
 
   @override
   Widget build([BuildContext context]) {
-    return MaterialApp(
-        home: Scaffold(
+    EventModel _event = null;
+    //final EventModel _event = ModalRoute.of(context).settings.arguments;
+    final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
+    String idvalue = ModalRoute.of(context).settings.arguments;
+    if (idvalue != null) {
+      firestoreDatabase.eventdoc(eventId: idvalue).then((val) =>
+          setState(() {
+            EventModel _event = val;
+          }));
+    }
+    return Scaffold(
             appBar: AppBar(
               title: Text(getTile()),
               backgroundColor: Colors.green,
@@ -302,8 +326,14 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                 children: <Widget>[_getAppointmentEditor(context)],
               ),
             ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.delete, color: Colors.white,),
+            onPressed: () {
+              final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
+              firestoreDatabase.deleteEvent(_event);
+              },
         ),
-    );
+        );
   }
 
   String getTile() {

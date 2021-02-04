@@ -35,7 +35,6 @@ class _CreateEditStackTodoState extends State<CreateEditStackTodo> {
         TextEditingController(text: _stacktodo != null ? _stacktodo.task : "");
     _extraNoteController =
         TextEditingController(text: _stacktodo != null ? _stacktodo.extraNote : "");
-
     _checkboxCompleted = _stacktodo != null ? _stacktodo.complete : false;
   }
 

@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:noteapp/models/event_model.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:noteapp/services/firestore_database.dart';
@@ -49,7 +48,7 @@ class LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
       for (DocumentSnapshot snapshotdata in querySnapshot) {
         Map<dynamic, dynamic> values = snapshotdata.data;
         if (values != null) {
-          data = values; //[key[i]];
+          data = values;
           collection ??= <Meeting>[];
           final Random random = new Random();
           collection.add(Meeting(
@@ -70,7 +69,6 @@ class LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
           child: Column(
             children: [
               Expanded(
-                //height: 400,
                 child: SfCalendar(
                   view: CalendarView.day,
                   initialDisplayDate: DateTime.now(),
@@ -78,23 +76,6 @@ class LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
                   monthViewSettings: MonthViewSettings(showAgenda: true),
                 ),
               ),
-              /*RaisedButton(onPressed: () {
-                final dbRef = FirebaseDatabase.instance.reference().child("CalendarData");
-                dbRef.push().set({
-                  "StartTime": '07/04/2020 07:00:00',
-                  "EndTime": '07/04/2020 08:00:00',
-                  "Subject":'NewMeeting',
-                }).then((_) {
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Successfully Added')));
-                }).catchError((onError) {
-                  print(onError);
-                });
-              }, child: Text("Add")),
-              RaisedButton(onPressed: () {
-                final dbRef = FirebaseDatabase.instance.reference().child("CalendarData");
-                dbRef.remove();
-              }, child: Text("Delete")),*/
             ],
           ));
     }
@@ -160,12 +141,3 @@ class Meeting {
   Color background;
   bool isAllDay;
 }
-
-/*
-getDataFromDatabase() async{
-  Widget _buildcalendarbody(BuildContext context) {
-    final firestoreDatabase = Provider.of<FirestoreDatabase>(context, listen: false);
-    Future<List> getValue = firestoreDatabase.allEvents();
-  }
-  return getValue;
-}*/

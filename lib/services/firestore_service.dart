@@ -21,6 +21,13 @@ class FirestoreService {
     await reference.setData(data, merge: merge);
   }
 
+  Future getdoc({
+    @required String path,
+  }) async {
+    final reference = Firestore.instance.document(path);
+    return reference;
+  }
+
   Future<void> bulkSet({
     @required String path,
     @required List<Map<String, dynamic>> datas,
@@ -69,8 +76,10 @@ class FirestoreService {
     @required T builder(Map<String, dynamic> data, String documentID),
   }) {
     final DocumentReference reference = Firestore.instance.document(path);
-    final Stream<DocumentSnapshot> snapshots = reference.snapshots();
+    final Stream <DocumentSnapshot> snapshots = reference.snapshots();
     return snapshots
         .map((snapshot) => builder(snapshot.data, snapshot.documentID));
   }
 }
+
+

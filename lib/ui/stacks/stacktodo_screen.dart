@@ -104,10 +104,10 @@ class stacktodoScreen extends StatelessWidget {
                       trailing: IconButton(
                           icon: const Icon(Icons.schedule_send, color: Colors.grey, size: 18.0,),
                           onPressed: () {
-                            Navigator.push<Widget>(
-                                context,
-                                MaterialPageRoute(
-                                builder: (BuildContext context) => AppointmentEditor()));
+                            Navigator.of(context).pushNamed(
+                                Routes.appointment,
+                                arguments: stacktodos[index]);
+                            //);
                           }
                       ),
                     ),

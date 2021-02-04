@@ -1,9 +1,10 @@
 import 'dart:async';
+//import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
-import 'package:noteapp/models/todo_model.dart';
 import 'package:noteapp/models/event_model.dart';
+import 'package:noteapp/models/todo_model.dart';
 import 'package:noteapp/models/user_model.dart';
 import 'package:noteapp/models/goal_model.dart';
 import 'package:noteapp/models/stacktodo_model.dart';
@@ -82,7 +83,7 @@ class FirestoreDatabase {
 
   //Method to delete eventModel entry
   Future<void> deleteEvent(EventModel event) async {
-    await _firestoreService.deleteData(path: FirestorePath.todo(uid, event.id));
+    await _firestoreService.deleteData(path: FirestorePath.event(uid, event.id));
   }
 
   //Method to delete goal entry
@@ -118,6 +119,14 @@ class FirestoreDatabase {
         path: FirestorePath.event(uid, eventId),
         builder: (data, documentId) => EventModel.fromMap(data, documentId),
       );
+
+  //Method to retrieve eventModel object based on the given eventId
+  Future<EventModel> eventdoc({@required String eventId}) async {
+    _firestoreService.getdoc(
+      path: FirestorePath.event(uid, eventId),
+    );
+  }
+
 
   //Method to retrieve stackModel object based on the given stackId and goalid
   Stream<StackModel> stackStream({@required String goalId, String stackId}) =>
